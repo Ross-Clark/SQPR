@@ -1,5 +1,5 @@
-from .ghclient import GithubClient
-from .sqclient import SonarqubeClient
+from ghclient import GithubClient
+from sqclient import SonarqubeClient
 import argparse
 
 def main(args):
