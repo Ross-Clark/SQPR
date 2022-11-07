@@ -15,7 +15,7 @@ def main(args):
 
     if(status=="OK"):
         # post ok message
-
+        comments = []
         if number_of_issues > 0:
             # ok with comments based on issues
             body = """Quality Gate passed, some issues found 🙂
@@ -25,7 +25,7 @@ def main(args):
             ghc.create_review(pull=int(args['pull_request_number']), body=body, event="COMMENT", comments=comments)
         else:
             # no issues
-            ghc.create_review(pull=int(args['pull_request_number']), body="No issues found 😀", event="COMMENT")
+            ghc.create_review(pull=int(args['pull_request_number']), body="No issues found 😀", event="COMMENT", comments=comments)
 
     else:
         # post fail and issues
@@ -37,7 +37,7 @@ def main(args):
             comments = generate_comment_list(issues)
             ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
         else:
-            ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES")
+            ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
 
 def generate_comment_list(issues):
     comments = []
