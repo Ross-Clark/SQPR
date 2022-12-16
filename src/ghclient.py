@@ -1,12 +1,13 @@
 from github import Github
 
+
 # Get the access token from the environment variable
 class GithubClient:
-    def __init__(self,access_token,github_repo):
+    def __init__(self, access_token, github_repo):
         self.g = Github(access_token)
         self.repo = self.g.get_repo(github_repo)
 
-    def create_review(self,pull, body, event, comments):
+    def create_review(self, pull, body, event, comments):
         '''
             creates a review on a pull request
             pull is the pull request number

@@ -2,6 +2,7 @@ from unittest import TestCase
 
 from src.sqpr import generate_comment, generate_comment_list
 
+
 class sqpr_test(TestCase):
 
     issue = {
@@ -37,7 +38,7 @@ class sqpr_test(TestCase):
         actual = generate_comment(self.issue)
 
         self.assertEqual(expected, actual)
-    
+
     def test_generate_comment_list(self):
 
         expected = [{
@@ -45,8 +46,7 @@ class sqpr_test(TestCase):
             "line": 93,
             "body": "Rename function \"Login_fields_valid_Inputs\" to match the regular expression ^[a-z_][a-z0-9_]*$.",
         }]
-        
-        actual=generate_comment_list([self.issue])
+
+        actual = generate_comment_list([self.issue])
 
         self.assertEqual(expected, actual)
-
