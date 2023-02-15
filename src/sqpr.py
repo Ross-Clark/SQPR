@@ -47,11 +47,18 @@ def generate_comment_list(issues):
 
 def generate_comment(issue):
     path = issue.get('component').split(':')[1]
-    return {
-        "path": path,
-        "body": issue.get('message'),
-        "line": issue.get('line'),
-    }
+    if line:
+        comment = {
+            "path": path,
+            "body": issue.get('message'),
+            "line": issue.get('line'),
+        }
+    else:
+        comment = {
+            "path": path,
+            "body": issue.get('message'),
+        }
+    return comment
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Sonarqube Github Pull Request Integration')
