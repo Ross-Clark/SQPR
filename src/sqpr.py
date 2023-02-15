@@ -2,6 +2,7 @@ from ghclient import GithubClient
 from sqclient import SonarqubeClient
 import argparse
 
+
 def main(args):
     # get status and issues from SonarQube
     sqc = SonarqubeClient(args['sonarqube_url'] , args['sonarqube_token'], args['project_key'])
@@ -32,18 +33,22 @@ def main(args):
 
         body = """Quality Gate Failed 🤨
         see the issues in more detail at [Sonarqube]({})""".format(sonarqube_url)
-
+        
+        comments = []
+        
         if number_of_issues > 0:
             comments = generate_comment_list(issues)
-            ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
-        else:
-            pass
+            comments = [x for x in comments if x.get('line')] 
+            
+        ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
 
+        
 def generate_comment_list(issues):
     comments = []
     for issue in issues:
         comments.append(generate_comment(issue))
     return comments
+
 
 def generate_comment(issue):
     path = issue.get('component').split(':')[1]
@@ -55,6 +60,7 @@ def generate_comment(issue):
             "line": line,
         }
     return comment
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Sonarqube Github Pull Request Integration')
