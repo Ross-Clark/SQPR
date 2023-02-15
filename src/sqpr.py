@@ -37,7 +37,7 @@ def main(args):
             comments = generate_comment_list(issues)
             ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
         else:
-            ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
+            pass
 
 def generate_comment_list(issues):
     comments = []
@@ -49,16 +49,10 @@ def generate_comment(issue):
     path = issue.get('component').split(':')[1]
     message = issue.get('message')
     line = issue.get('line')
-    if line:
-        comment = {
+    comment = {
             "path": path,
             "body": message,
             "line": line,
-        }
-    else:
-        comment = {
-            "path": path,
-            "body": message,
         }
     return comment
 
