@@ -23,6 +23,7 @@ def main(args):
                 see the issues in more detail at [Sonarqube]({})""".format(sonarqube_url)
 
             comments = generate_comment_list(issues)
+            comments = [x for x in comments if x.get('line')] 
             ghc.create_review(pull=int(args['pull_request_number']), body=body, event="COMMENT", comments=comments)
         else:
             # no issues
