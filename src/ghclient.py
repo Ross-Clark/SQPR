@@ -1,7 +1,5 @@
 from github import Github
 
-
-# Get the access token from the environment variable
 class GithubClient:
     def __init__(self, access_token, github_repo):
         self.g = Github(access_token)

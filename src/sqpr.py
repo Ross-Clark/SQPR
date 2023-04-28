@@ -11,37 +11,44 @@ def main(args):
     issues = sqc.get_pull_request_issues(args['pull_request_number'])
     number_of_issues=len(list(issues))
     status = sqc.get_pull_request_status(args['pull_request_number'])
-    ghc = GithubClient(access_token=args['github_token'], github_repo=args['repo'])
     sonarqube_url = sqc.get_sonarqube_pull_request_url(args['sonarqube_url'],args['pull_request_number'])
+    repo_type = args['repo'].to_lower()
 
-    if(status=="OK"):
-        # post ok message
-        comments = []
-        if number_of_issues > 0:
-            # ok with comments based on issues
-            body = """Quality Gate passed, some issues found 🙂
-                see the issues in more detail at [Sonarqube]({})""".format(sonarqube_url)
+    if( repo_type == "github" ):
+        ghc = GithubClient(access_token=args['github_token'], github_repo=args['repo'])
 
-            comments = generate_comment_list(issues)
-            comments = [x for x in comments if x.get('line')] 
-            ghc.create_review(pull=int(args['pull_request_number']), body=body, event="COMMENT", comments=comments)
+        if(status=="OK"):
+            # post ok message
+            comments = []
+            if number_of_issues > 0:
+                # ok with comments based on issues
+                body = """Quality Gate passed, some issues found 🙂
+                    see the issues in more detail at [Sonarqube]({})""".format(sonarqube_url)
+
+                comments = generate_comment_list(issues)
+                comments = [x for x in comments if x.get('line')] 
+                ghc.create_review(pull=int(args['pull_request_number']), body=body, event="COMMENT", comments=comments)
+            else:
+                # no issues
+                ghc.create_review(pull=int(args['pull_request_number']), body="No issues found 😀", event="COMMENT", comments=comments)
+
         else:
-            # no issues
-            ghc.create_review(pull=int(args['pull_request_number']), body="No issues found 😀", event="COMMENT", comments=comments)
+            # post fail and issues
 
-    else:
-        # post fail and issues
-
-        body = """Quality Gate Failed 🤨
-        see the issues in more detail at [Sonarqube]({})""".format(sonarqube_url)
-        
-        comments = []
-        
-        if number_of_issues > 0:
-            comments = generate_comment_list(issues)
-            comments = [x for x in comments if x.get('line')] 
+            body = """Quality Gate Failed 🤨
+            see the issues in more detail at [Sonarqube]({})""".format(sonarqube_url)
             
-        ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
+            comments = []
+            
+            if number_of_issues > 0:
+                comments = generate_comment_list(issues)
+                comments = [x for x in comments if x.get('line')] 
+                
+            ghc.create_review(pull=int(args['pull_request_number']), body=body, event="REQUEST_CHANGES", comments=comments)
+    elif( repo_type == "azure" ):
+        print("Azure repo")
+    else:
+        print("Unknown repo type")
 
         
 def generate_comment_list(issues):
