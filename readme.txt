@@ -12,3 +12,7 @@ run sqpr after analysing your project with sonarqube
 example usage: sqpr.py -g <github-token> -k <sonarqube-project-key> -p <pull-request-number> -r <github-repo> -s <sonarqube-token> -u <sonarqube-url>
 
 currently this requires cloning the project into the pipeline, however I am planning on releasing it on pypi later
+
+
+--------------
+Made as a student project
